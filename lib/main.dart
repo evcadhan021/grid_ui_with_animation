@@ -24,13 +24,14 @@ class _HomePageState extends State<HomePage> {
     'assets/images/six.jpg',
   ];
 
+  // List to track bookmarked items
+  final List<bool> _isBookmarked = List<bool>.filled(6, false);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.grey[800],
       appBar: AppBar(
-        // title: Text('Flutter App'),
-        // centerTitle: true,
         backgroundColor: Colors.transparent,
         leading: const Icon(
           Icons.menu,
@@ -61,87 +62,112 @@ class _HomePageState extends State<HomePage> {
         ],
       ),
       body: SafeArea(
-          child: Container(
-        padding: const EdgeInsets.all(20),
-        child: Column(
-          children: [
-            Container(
-              height: 250,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(20),
-                image: const DecorationImage(
-                  image: AssetImage('assets/images/one.jpg'),
-                  fit: BoxFit.cover,
-                ),
-              ),
-              child: Container(
+        child: Container(
+          padding: const EdgeInsets.all(20),
+          child: Column(
+            children: [
+              Container(
+                height: 250,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(20),
-                  gradient: LinearGradient(
-                    begin: Alignment.bottomRight,
-                    colors: [
-                      Colors.black.withOpacity(.8),
-                      Colors.black.withOpacity(.2),
+                  image: const DecorationImage(
+                    image: AssetImage('assets/images/one.jpg'),
+                    fit: BoxFit.cover,
+                  ),
+                ),
+                child: Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(20),
+                    gradient: LinearGradient(
+                      begin: Alignment.bottomRight,
+                      colors: [
+                        Colors.black.withOpacity(.8),
+                        Colors.black.withOpacity(.2),
+                      ],
+                    ),
+                  ),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      const Text(
+                        'Lifestyle Sale',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 35,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const SizedBox(height: 30),
+                      Container(
+                        height: 50,
+                        margin: const EdgeInsets.symmetric(horizontal: 40),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: Center(
+                          child: Text(
+                            'Shop Now',
+                            style: TextStyle(
+                              color: Colors.grey[900],
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 30),
                     ],
                   ),
                 ),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    const Text(
-                      'Lifestyle Sale',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 35,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    const SizedBox(height: 30),
-                    Container(
-                      height: 50,
-                      margin: const EdgeInsets.symmetric(horizontal: 40),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: Center(
-                        child: Text(
-                          'Shop Now',
-                          style: TextStyle(
-                            color: Colors.grey[900],
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 30),
-                  ],
-                ),
               ),
-            ),
-            Expanded(
+              Expanded(
                 child: GridView.count(
-              crossAxisCount: 2,
-              padding: const EdgeInsets.all(20.0),
-              crossAxisSpacing: 20.0,
-              mainAxisSpacing: 20.0,
-              children: [
-                ..._listItem.map((item) => Card(
-                      child: Container(
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10),
-                          image: DecorationImage(
-                            image: AssetImage(item),
-                            fit: BoxFit.cover,
+                  crossAxisCount: 2,
+                  padding: const EdgeInsets.all(20.0),
+                  crossAxisSpacing: 20.0,
+                  mainAxisSpacing: 20.0,
+                  children: List.generate(
+                    _listItem.length,
+                    (index) => Stack(
+                      children: [
+                        Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            image: DecorationImage(
+                              image: AssetImage(_listItem[index]),
+                              fit: BoxFit.cover,
+                            ),
                           ),
                         ),
-                      ),
-                    )),
-              ],
-            ))
-          ],
+                        Positioned(
+                          top: 8,
+                          right: 8,
+                          child: GestureDetector(
+                            onTap: () {
+                              setState(() {
+                                _isBookmarked[index] = !_isBookmarked[index];
+                              });
+                            },
+                            child: Icon(
+                              _isBookmarked[index]
+                                  ? Icons.bookmark
+                                  : Icons.bookmark_border,
+                              color: _isBookmarked[index]
+                                  ? Colors.yellow
+                                  : Colors.white,
+                              size: 30,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              )
+            ],
+          ),
         ),
-      )),
+      ),
     );
   }
 }
